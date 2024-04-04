@@ -5,7 +5,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 const routes = require('./routes/starter')
-const petRoutes = require('./routes/pets')
+const petRoutes = require('./routes/pets-prisma')
 
 const { ValidationError } = require('./middleware/CustomErrors')
 
