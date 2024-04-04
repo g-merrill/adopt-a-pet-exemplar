@@ -1,0 +1,15 @@
+.pet-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+.pet-card h2 {
+    color: #007bff;
+}
+
+.actions {
+    margin-top: 10px;
+}  

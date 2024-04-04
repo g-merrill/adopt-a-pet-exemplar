@@ -1,55 +1,75 @@
 import React, { useState } from 'react';
+import '../styles/Forms.css'
 
-function AddPetForm() {
-  const [name, setName] = useState('');
-  const [type, setType] = useState('');
-  const [breed, setBreed] = useState('');
-  const [age, setAge] = useState('');
+const AddPetForm = ({ onPetAdded }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    type: '',
+    breed: '',
+    age: '',
+  });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     fetch('http://localhost:3000/pets', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, type, age: parseInt(age, 10) }),
+      body: JSON.stringify(formData),
     })
     .then(response => response.json())
     .then(data => {
-      console.log('Pet added:', data);
-      // Optionally clear the form or give user feedback
+      console.log('Success:', data);
+      onPetAdded(); // Callback to inform parent component about the addition
     })
-    .catch(error => console.error('Error adding pet:', error));
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Add a New Pet</h2>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Name"
-        required
-      />
-      <input
-        type="text"
-        value={type}
-        onChange={(e) => setType(e.target.value)}
-        placeholder="Type (e.g., Dog, Cat)"
-        required
-      />
-      <input
-        type="number"
-        value={age}
-        onChange={(e) => setAge(e.target.value)}
-        placeholder="Age"
-        required
-      />
+      <label>
+        Name:
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+      </label>
+      <label>
+        Type:
+        <input
+          type="text"
+          name="type"
+          value={formData.type}
+          onChange={handleChange}
+          required
+        />
+      </label>
+      <label>
+        Age:
+        <input
+          type="number"
+          name="age"
+          value={formData.age}
+          onChange={handleChange}
+          required
+        />
+      </label>
       <button type="submit">Add Pet</button>
     </form>
   );
-}
+};
 
 export default AddPetForm;
