@@ -1,28 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import '../styles/Forms.css'
 
 const UpdatePetForm = () => {
-  const { petId } = useParams();
-  const navigate = useNavigate();
+  const { petId } = useParams()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: '',
     type: '',
-    breed: '',
     age: '',
-  });
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  })
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  // Fetch pet details for updating
   useEffect(() => {
     if (petId) {
       fetch(`http://localhost:3000/pets/${petId}`)
         .then(response => {
           if (!response.ok) {
-            throw new Error('Pet not found.');
+            throw new Error('Pet not found.')
           }
-          return response.json();
+          return response.json()
         })
         .then(data => {
           setFormData({
@@ -30,64 +28,64 @@ const UpdatePetForm = () => {
             type: data.type,
             age: data.age.toString(),
           });
-          setIsLoading(false);
+          setIsLoading(false)
         })
         .catch(error => {
-          console.error('Error:', error);
-          setError('Failed to fetch pet details.');
-          setIsLoading(false);
-        });
+          console.error('Error:', error)
+          setError('Failed to fetch pet details.')
+          setIsLoading(false)
+        })
     } else {
-      setError('No pet ID provided.');
-      setIsLoading(false);
+      setError('No pet ID provided.')
+      setIsLoading(false)
     }
-  }, [petId]);
+  }, [petId])
 
-  // Handle form field changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
+
     setFormData(prevState => ({
       ...prevState,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
-  // Submit updated pet details
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
+
     const updatedFormData = {
       ...formData,
-      age: parseInt(formData.age, 10) // Convert age from string to integer
-    };
+      age: parseInt(formData.age, 10)
+    }
 
     fetch(`http://localhost:3000/pets/${petId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(updatedFormData), // Use the updated form data with age as an integer
+      body: JSON.stringify(updatedFormData),
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Failed to update the pet.');
+        throw new Error('Failed to update the pet.')
       }
-      return response.json();
+      return response.json()
     })
     .then(data => {
-      console.log('Success:', data);
-      navigate('/'); // Navigate back to the pet list after successful update
+      console.log('Success:', data)
+      navigate('/')
     })
     .catch(error => {
-      console.error('Error:', error);
-      setError('Failed to update pet. Please try again later.');
-    });
-  };
+      console.error('Error:', error)
+      setError('Failed to update pet. Please try again later.')
+    })
+  }
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <div>🐱 No pet found! 🐶</div>
+  if (error) return <div>Error: {error}</div>
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="pet-form" onSubmit={handleSubmit}>
       <label>
         Name:
         <input
@@ -95,9 +93,9 @@ const UpdatePetForm = () => {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          required
         />
       </label>
+
       <label>
         Type:
         <input
@@ -108,6 +106,7 @@ const UpdatePetForm = () => {
           required
         />
       </label>
+
       <label>
         Age:
         <input
@@ -118,9 +117,17 @@ const UpdatePetForm = () => {
           required
         />
       </label>
-      <button type="submit">Update Pet</button>
-    </form>
-  );
-};
 
-export default UpdatePetForm;
+      <div className="form-buttons">
+        <button type="submit">Update</button>
+
+        <Link to="/">
+          <button>Cancel</button>
+        </Link>
+      </div>
+
+    </form>
+  )
+}
+
+export default UpdatePetForm

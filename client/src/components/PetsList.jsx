@@ -1,36 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import PetCard from './PetCard'; // Make sure this import path matches your file structure
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import PetCard from './PetCard'
 import '../styles/Pets.css'
 
 const PetsList = ({ filters }) => {
-  const [pets, setPets] = useState([]);
-  const [error, setError] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [pets, setPets] = useState([])
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
-    // Construct query parameters from the filters object
     const queryParams = new URLSearchParams({
       ...(filters.type && { type: filters.type }),
       ...(filters.ageMin && { age_min: filters.ageMin }),
       ...(filters.ageMax && { age_max: filters.ageMax }),
-    }).toString();
+    }).toString()
 
     fetch(`http://localhost:3000/pets?${queryParams}`)
       .then(response => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Response failed')
         }
-        return response.json();
+        return response.json()
       })
       .then(data => {
-        setPets(data); // Update the pets state with the fetched data
+        setPets(data)
       })
       .catch(error => {
-        console.error('There was a problem with your fetch operation:', error);
-        setError('Failed to fetch pets. Please try again later.');
+        console.error('There was a problem with your fetch operation:', error)
+        setError('Failed to fetch pets. Please try again later.')
       });
-  }, [filters]); // This useEffect depends on the filters, it re-runs whenever filters change
+  }, [filters])
 
   const handleDelete = (id) => {
     fetch(`http://localhost:3000/pets/${id}`, {
@@ -38,26 +37,26 @@ const PetsList = ({ filters }) => {
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Failed to delete the pet.');
+        throw new Error('Failed to delete the pet.')
       }
-      // Filter out the pet that was deleted
-      setPets(pets.filter(pet => pet.id !== id));
+
+      setPets(pets.filter(pet => pet.id !== id))
     })
     .catch(error => {
-      console.error('Error:', error);
-      setError('Failed to delete pet. Please try again later.');
+      console.error('Error:', error)
+      setError('Failed to delete pet. Please try again later.')
     });
   };
 
   const handleUpdate = (id) => {
-    navigate(`/update-pet/${id}`); // Navigate to the update form
-  };
+    navigate(`/update-pet/${id}`)
+  }
 
-  if (error) return <div>Error: {error}</div>;
-  if (!pets.length) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>
+  if (!pets.length) return <div>🐶 No pets found! 🐱</div>
 
   return (
-    <div>
+    <div className="pets-container">
       {pets.map(pet => (
         <PetCard 
           key={pet.id}

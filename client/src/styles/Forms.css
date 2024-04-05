@@ -1,24 +1,20 @@
-form {
-    background-color: #f1f1f1;
-    padding: 20px;
+.pet-form {
+    padding: 10px;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
 }
 
-label {
-    display: block;
-    margin-bottom: 10px;
+.pet-form label {
+    margin: 10px;
 }
 
-input[type="text"], input[type="number"], select {
-    width: 100%;
-    box-sizing: border-box; /* Ensures padding doesn't increase width */
+.pet-form input {
+    margin: 10px;
 }
 
-form button[type="submit"] {
-    background-color: #28a745;
-}
-
-form button[type="button"] { /* Clear Filters button */
-    background-color: #6c757d;
+.form-buttons {
+    display: flex;
+    align-items: center;
 }
   

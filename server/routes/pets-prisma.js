@@ -45,7 +45,10 @@ router.get('/pets/:petId', async (req, res) => {
 })
 
 router.post('/pets', async (req, res) => {
-    let { name, type, breed, age } = req.body
+    let { name, type, age } = req.body
+
+    // Convert age to an integer
+    age = parseInt(age, 10)
     
     // Check for a name and set to "unknown" if not provided
     name = name || "unknown"
@@ -55,8 +58,7 @@ router.post('/pets', async (req, res) => {
           data: {
             name,
             type,
-            breed,
-            age,
+            age
           },
         })
 
@@ -68,15 +70,14 @@ router.post('/pets', async (req, res) => {
 
 router.put('/pets/:id', async (req, res) => {
     const { id } = req.params
-    const { name, type, breed, age } = req.body
+    const { name, type, age } = req.body
 
     const pet = await prisma.pet.update({
       where: { id: parseInt(id) },
       data: {
         name,
         type,
-        breed,
-        age,
+        age
       },
     })
 
