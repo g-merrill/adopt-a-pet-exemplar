@@ -9,6 +9,10 @@ const pets = [
 
 async function main() {
     console.log(`Start seeding ...`)
+
+    // Clear the table first
+    await prisma.pet.deleteMany()
+    
     for (const pet of pets) {
         const petRecord = await prisma.pet.create({
             data: pet,

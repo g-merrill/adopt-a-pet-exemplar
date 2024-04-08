@@ -6,6 +6,8 @@
 
 generator client {
   provider = "prisma-client-js"
+  // Specify the path to the seeding script
+  seed = "prisma/seed.js"
 }
 
 datasource db {
@@ -18,10 +20,4 @@ model Pet {
   name  String  // Name of the pet
   type  String  // Type of the pet (e.g., Dog, Cat)
   age   Int     // Age of the pet
-}
-
-generator client {
-  provider = "prisma-client-js"
-  // Specify the path to the seeding script
-  seed = "prisma/seed.js"
 }
