@@ -8,6 +8,7 @@ generator client {
   provider = "prisma-client-js"
   // Specify the path to the seeding script
   seed = "prisma/seed.js"
+  output = "./generated/prisma-client"
 }
 
 datasource db {

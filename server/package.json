@@ -16,8 +16,10 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.11.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "express-session": "^1.18.1"
   },
   "devDependencies": {
     "jest": "^29.7.0",
