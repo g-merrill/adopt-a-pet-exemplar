@@ -1,8 +1,15 @@
 const express = require("express")
 const bcrypt = require("bcrypt")
 const prisma = require("../prisma/prisma-client.js")
+const rateLimit = require("express-rate-limit");
 
 const router = express.Router()
+
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 login attempts per windowMs
+    message: { error: "Too many failed login attempts. Try again later." },
+});
 
 router.get("/", (req, res) => {
 	res.send("Welcome to my app!")
@@ -32,11 +39,29 @@ router.post("/signup", async (req, res) => {
 	const newUser = await prisma.user.create({
 		data: { username, password: hashedPassword },
 	})
-	res.status(201).json({ message: `User: ${newUser.username} created successfully!` })
+	res
+		.status(201)
+		.json({ message: `User: ${newUser.username} created successfully!` })
 })
 
-router.post("/login", (req, res) => {
-	res.send("Welcome to my app!")
+router.post("/login", loginLimiter, async (req, res) => {
+	const { username, password } = req.body
+	if (!username || !password) {
+		return res
+			.status(400)
+			.json({ error: "Username and password are required." })
+	}
+	const user = await prisma.user.findUnique({
+		where: { username },
+	})
+	if (!user) {
+		return res.status(400).json({ error: "Invalid username or password." })
+	}
+	const isValidPassword = await bcrypt.compare(password, user.password)
+	if (!isValidPassword) {
+		return res.status(400).json({ error: "Invalid username or password." })
+	}
+	res.json({ message: "Login successful!" })
 })
 
 router.post("/logout", (req, res) => {
