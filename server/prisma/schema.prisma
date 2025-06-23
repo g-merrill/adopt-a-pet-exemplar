@@ -16,9 +16,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        Int     @id @default(autoincrement()) // Auto-incremented primary key
+  username  String  // Name of the pet
+  password  String  // Type of the pet (e.g., Dog, Cat)
+  pets      Pet[]
+}
+
 model Pet {
-  id    Int     @id @default(autoincrement()) // Auto-incremented primary key
-  name  String  // Name of the pet
-  type  String  // Type of the pet (e.g., Dog, Cat)
-  age   Int     // Age of the pet
+  id      Int     @id @default(autoincrement()) // Auto-incremented primary key
+  name    String  // Name of the pet
+  type    String  // Type of the pet (e.g., Dog, Cat)
+  age     Int     // Age of the pet
+  user    User @relation(fields: [userId], references: [id])
+  userId  Int
 }
